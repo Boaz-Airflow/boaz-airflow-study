@@ -9,11 +9,12 @@ default_args = {
  'retries': 1,
  'retry_delay': timedelta(minutes=3),
 }
+
 test_dag = DAG(
  "dag_v1", # DAG name
  schedule="0 9 * * *",
  tags=['test'],
- catchUp=False,
+ catchup=False, # catchUp -> catchup
  default_args=default_args
 )
 
