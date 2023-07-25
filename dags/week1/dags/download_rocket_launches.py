@@ -24,7 +24,9 @@ download_launches = BashOperator(
 
 def _get_pictures():
     # Ensure directory exists
-    pathlib.Path("/data/images").mkdir(parents=True, exist_ok=True)
+    DATA_PATH = "/opt/airflow/data"
+    
+    pathlib.Path(f"{DATA_PATH}/images").mkdir(parents=True, exist_ok=True)
 
     # Download all pictures in launches.json
     with open("/tmp/launches.json") as f:
@@ -34,7 +36,7 @@ def _get_pictures():
             try:
                 response = requests.get(image_url)
                 image_filename = image_url.split("/")[-1]
-                target_file = f"/data/images/{image_filename}"
+                target_file = f"{DATA_PATH}/images/{image_filename}"
                 with open(target_file, "wb") as f:
                     f.write(response.content)
                 print(f"Downloaded {image_url} to {target_file}")
