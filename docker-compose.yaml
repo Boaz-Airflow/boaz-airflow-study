@@ -59,7 +59,7 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas numpy}
   volumes:
@@ -76,6 +76,22 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  postgres-server:
+    image: postgres:13
+    container_name: postgres-server
+    ports:
+      - 1234:1234
+    environment:
+      POSTGRES_USER: boaz
+      POSTGRES_PASSWORD: qwer1234!
+      POSTGRES_DB: boaz
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-U", "boaz", "-d", "boaz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: postgres -p 1234
+
   postgres:
     image: postgres:13
     environment:
