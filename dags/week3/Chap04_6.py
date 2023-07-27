@@ -6,14 +6,14 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
-# def _get_data(output_path, execution_date):
-#     year, month, day, hour, *_ = execution_date.timetuple()
-#     url = (
-#         "https://dumps.wikimedia.org/other/pageviews/"
-#         f"{year}/{year}-{month:0>2}/"
-#         f"pageviews-{year}{month:0>2}{day:0>2}-{hour:0>2}0000.gz"
-#     )
-#     request.urlretrieve(url, output_path)
+
+def _get_data(year, month, day, hour, output_path):
+    url = (
+        "https://dumps.wikimedia.org/other/pageviews/"
+        f"{year}/{year}-{month:0>2}/"
+        f"pageviews-{year}{month:0>2}{day:0>2}-{hour:0>2}0000.gz"
+    )
+    request.urlretrieve(url, output_path)
 
 
 def _fetch_pageviews(pagenames, execution_date):
@@ -48,29 +48,16 @@ def Chap04():
         bash_command="rm -rf /opt/airflow/data/wikipageviews.gz",
     )
 
-    # get_data = PythonOperator(
-    #     task_id="get_data",
-    #     python_callable=_get_data,
-    #     op_kwargs={
-    #         "year": "{{ execution_date.year }}",
-    #         "month": "{{ execution_date.month }}",
-    #         "day": "{{ execution_date.day }}",
-    #         "hour": "{{ execution_date.hour }}",
-    #         "output_path": "/opt/airflow/data/wikipageviews.gz",
-    #     },
-    # )
-    get_data = BashOperator(
+    get_data = PythonOperator(
         task_id="get_data",
-        bash_command=(
-            "curl -o /opt/airflow/data/wikipageviews.gz "
-            "https://dumps.wikimedia.org/other/pageviews/"
-            "{{ execution_date.year }}/"
-            "{{ execution_date.year }}-{{ '{:02}'.format(execution_date.month) }}/"
-            "pageviews-{{ execution_date.year }}"
-            "{{ '{:02}'.format(execution_date.month) }}"
-            "{{ '{:02}'.format(execution_date.day) }}-"
-            "{{ '{:02}'.format(execution_date.hour) }}0000.gz"
-        ),
+        python_callable=_get_data,
+        op_kwargs={
+            "year": "{{ execution_date.year }}",
+            "month": "{{ execution_date.month }}",
+            "day": "{{ execution_date.day }}",
+            "hour": "{{ execution_date.hour }}",
+            "output_path": "/opt/airflow/data/wikipageviews.gz",
+        },
     )
 
     extract_gz = BashOperator(

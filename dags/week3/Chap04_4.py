@@ -5,8 +5,10 @@ from airflow.decorators import dag
 from airflow.operators.python import PythonOperator
 
 
-def _get_data(output_path, execution_date):
-    year, month, day, hour, *_ = execution_date.timetuple()
+def _get_data(year, month, day, hour, output_path):
+    """
+    NOTE: op_kwargs
+    """
     url = (
         "https://dumps.wikimedia.org/other/pageviews/"
         f"{year}/{year}-{month:0>2}/"
