@@ -12,22 +12,22 @@ from airflow.operators.python import PythonOperator
 dag = DAG(
     dag_id="boaz_execution",
     description='A simple tutorial DAG',
-    schedule_interval= '1 * * * *',
-    start_date=dt.datetime(2023,7,21)
+    schedule_interval= '1 * * * *', # 매 시간 1분 실행
+    start_date=dt.datetime(2023,7,20)
 )
 
 fetch_events = BashOperator(
     task_id="bash_task",
-    bash_command='echo "Hi from bash operator"',
+    bash_command='echo "Hi from bash operator : {{ds}}"',
     dag =dag
 )
 
-def _basicPython():
+def _basic_python():
     print("hi boaz")
 
 basic_operation = PythonOperator(
     task_id="python_task",
-    python_callable=_basicPython,
+    python_callable=_basic_python,
     dag = dag
 )
 
