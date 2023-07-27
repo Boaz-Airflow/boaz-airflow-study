@@ -6,14 +6,12 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 
-def _get_data(output_path, execution_date):
-    year, month, day, hour, *_ = execution_date.timetuple()
+def _get_data(year, month, day, hour, output_path):
     url = (
         "https://dumps.wikimedia.org/other/pageviews/"
         f"{year}/{year}-{month:0>2}/"
         f"pageviews-{year}{month:0>2}{day:0>2}-{hour:0>2}0000.gz"
     )
-    print(url)
     request.urlretrieve(url, output_path)
 
 
