@@ -16,3 +16,5 @@
 - push 이후 PR을 날려주세요
     - https://github.com/Boaz-Airflow/boaz-airflow-study/pulls 으로 이동! <br>
     PR의 Title이나 Description은 자유롭게 적어주신 후 PR을 생성해주시면, 제가 스터디 중이나 스터디할 때, 확인 후 Merge 합니다 :D
+
+- 만약 dag에서 parsing이 되지 않기를 바란다면 dags/.airflowignore 에 파일과 폴더를 추가해주세요
