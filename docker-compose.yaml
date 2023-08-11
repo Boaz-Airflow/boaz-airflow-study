@@ -47,7 +47,7 @@ x-airflow-common:
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
-  build: .
+  # build: .
   environment:
     &airflow-common-env
     AIRFLOW_VAR_DATA_DIR: /opt/airflow/data
@@ -62,12 +62,13 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas numpy psycopg2}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas numpy} # psycopg2}
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
     - ${AIRFLOW_PROJ_DIR:-.}/data:/opt/airflow/data
+    - ./dags/Chap08/dags/custom:/opt/airflow/dags/custom  # add volumes for Chap08
 
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
@@ -76,6 +77,7 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+
 
 services:
   postgres-server:
@@ -151,7 +153,8 @@ services:
 
   airflow-worker:
     <<: *airflow-common
-    command: celery worker
+    command: 
+      - celery worker
     healthcheck:
       test:
         - "CMD-SHELL"
@@ -295,6 +298,17 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+
+  # Add movielens image for Chap8
+  movielens:
+    build: dags/Chap08/docker/movielens-api
+    image: manning-airflow/movielens-api
+    ports:
+      - "5001:5001"
+    environment:
+      API_USER: airflow
+      API_PASSWORD: airflow
+
 
 volumes:
   postgres-db-volume:

@@ -1,0 +1,4 @@
+Flask
+pandas
+Flask-HTTPAuth
+click
