@@ -1,17 +1,13 @@
+from airflowbook.operators.json_to_csv_operator import JsonToCsvOperator
 import csv
 import json
 from pathlib import Path
 import os
 import sys
 sys.path.append("/opt/airflow/dags")
-from airflowbook.operators.json_to_csv_operator import JsonToCsvOperator
 
 
 def test_json_to_csv_operator(tmp_path: Path):
-    print("현재경로:", os.path.abspath(__file__))
-
-    print("tmp 경로:", tmp_path.as_posix())
-
     input_path = tmp_path / "input.json"
     output_path = tmp_path / "output.csv"
 

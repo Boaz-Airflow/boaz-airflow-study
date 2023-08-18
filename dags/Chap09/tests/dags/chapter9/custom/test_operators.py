@@ -7,6 +7,7 @@ from airflowbook.operators.movielens_operator import (
     MovielensHook,
 )
 
+
 def test_movielenspopularityoperator(mocker):
     mock_get = mocker.patch.object(
         MovielensHook,
@@ -21,9 +22,7 @@ def test_movielenspopularityoperator(mocker):
         end_date="2015-01-03",
         top_n=5,
     )
-    
-    print("현재경로:",os.path.abspath(__file__))
-    
+
     result = task.execute(context=None)
     assert len(result) == 5
     assert mock_get.call_count == 1

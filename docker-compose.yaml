@@ -46,7 +46,7 @@ x-airflow-common: &airflow-common
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
-  build: .
+  # build: .
   environment: &airflow-common-env
     AIRFLOW_VAR_DATA_DIR: /opt/airflow/data
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -60,7 +60,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
     AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas numpy pytest pytest-mock}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas numpy pytest pytest-mock pytest-docker-tools apache-airflow-providers-common-sql psycopg2-binary apache-airflow-providers-postgres}
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
@@ -69,7 +69,7 @@ x-airflow-common: &airflow-common
     # - ${AIRFLOW_PROJ_DIR:-.}/dags/Chap08/dags/custom:/opt/airflow/dags/custom # add volumes for Chap08
     - ${AIRFLOW_PROJ_DIR:-.}/dags/Chap09/tests/airflowbook/operators/custom:/opt/airflow/dags/custom # Chap09-1
     - ${AIRFLOW_PROJ_DIR:-.}/dags/Chap09/tests/airflowbook:/opt/airflow/dags/airflowbook # Chap09-1
-
+    - /var/run/docker.sock:/var/run/docker.sock # for dind pattern
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on: &airflow-common-depends-on
     redis:
@@ -155,7 +155,7 @@ services:
 
   airflow-worker:
     <<: *airflow-common
-    command: celery worker
+    command: "celery worker && chmod 777 /var/run/docker.sock"
     healthcheck:
       test:
         - "CMD-SHELL"
@@ -258,6 +258,8 @@ services:
         mkdir -p /sources/logs /sources/dags /sources/plugins /sources/data
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins,data}
         exec /entrypoint airflow version
+        airflow db init
+        chmod 777 /var/run/docker.sock
     # yamllint enable rule:line-length
     environment:
       <<: *airflow-common-env

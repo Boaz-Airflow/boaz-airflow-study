@@ -1,25 +1,8 @@
 import requests
-
 from airflow.hooks.base_hook import BaseHook
 
 
 class MovielensHook(BaseHook):
-    """
-    Hook for the MovieLens API.
-
-    Abstracts details of the Movielens (REST) API and provides several convenience
-    methods for fetching data (e.g. ratings, users, movies) from the API. Also
-    provides support for automatic retries of failed requests, transparent
-    handling of pagination, authentication, etc.
-
-    Parameters
-    ----------
-    conn_id : str
-        ID of the connection to use to connect to the Movielens API. Connection
-        is expected to include authentication details (login/password) and the
-        host that is serving the API.
-    """
-
     DEFAULT_SCHEMA = "http"
     DEFAULT_PORT = 5001
 
