@@ -1,0 +1,23 @@
+name: Python mini test for dags
+
+on:
+  push:
+    paths:
+      - "dags/Chap09/**"
+    branches:
+      - "main"
+
+jobs:
+  test-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.6.9"
+      - name: Install dependencies
+        run: pip install apache-airflow pytest
+      - name: Test DAG integrity
+        run: pytest dags/Chap09/tests/dags/test_dag_integrity.py

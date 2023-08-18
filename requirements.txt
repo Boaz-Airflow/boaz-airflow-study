@@ -1,3 +1,9 @@
 psycopg2
 pandas
 numpy
+pytest
+pytest-mock 
+pytest-docker-tools 
+apache-airflow-providers-postgres 
+apache-airflow-providers-common-sql 
+psycopg2-binary
