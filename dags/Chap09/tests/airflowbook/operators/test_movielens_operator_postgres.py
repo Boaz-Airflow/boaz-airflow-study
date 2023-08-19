@@ -12,6 +12,8 @@ from airflowbook.operators.movielens_operator import (
     MovielensHook,
     MovielensToPostgresOperator,
 )
+
+
 @pytest.fixture(scope="module")
 def postgres_credentials():
     PostgresCredentials = namedtuple(
