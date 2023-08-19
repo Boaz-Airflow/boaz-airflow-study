@@ -1,4 +1,3 @@
-
 import pytest
 import os
 from collections import namedtuple
@@ -8,19 +7,6 @@ sys.path.append("/opt/airflow/dags")
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.models import DAG, Connection
 from pytest_docker_tools import fetch, container
-
-
-# from pytest_mock import MockFixture
-
-
-
-
-
-
-
-
-
-
 
 from airflowbook.operators.movielens_operator import (
     MovielensHook,
