@@ -20,4 +20,4 @@ jobs:
       - name: Install dependencies
         run: pip install apache-airflow pytest
       - name: Test DAG integrity
-        run: pytest dags/Chap09/tests/dags/test_dag_integrity.py
+        run: cd dags/Chap09/tests/dags && pytest test_dag_integrity.py
