@@ -18,7 +18,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/C/airflow/dags"
+    path: "/Users/${USER}/Downloads/airflow/dags"
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
@@ -51,7 +51,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/C/airflow/logs"
+    path: "/Users/${USER}/Downloads/airflow/logs"
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
