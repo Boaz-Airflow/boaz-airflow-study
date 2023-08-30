@@ -19,7 +19,6 @@ brew install helm
 mkdir ~/Downloads/airflow
 mkdir ~/Downloads/airflow/dags
 mkdir ~/Downloads/airflow/logs
-# sudo chmod -R 777 ~/Downloads/airflow
 kubectl delete pv airflow-local-dags-pv
 kubectl delete pv airflow-local-logs-pv
 kubectl create namespace airflow
