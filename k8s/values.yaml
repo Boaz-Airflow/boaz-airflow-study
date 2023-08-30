@@ -1,0 +1,50 @@
+executor: "KubernetesExecutor"
+# ----------------------- DAGS ----------------------- #
+dags:
+  persistence:
+    annotations: {}
+    enabled: true
+    size: 1Gi
+    storageClassName: airflow-storage
+    accessMode: ReadWriteOnce
+    existingClaim: airflow-local-dags-folder
+    subPath: ~
+# ----------------------- LOGS ----------------------- #
+logs:
+  persistence:
+    enabled: true
+    size: 10Gi
+    annotations: {}
+    storageClassName: airflow-storage
+    existingClaim: airflow-local-logs-folder
+# ----------------------- WEBSERVER ----------------------- #
+webserverSecretKeySecretName: airflow-webserver-secret-key
+webserver:
+  defaultUser:
+    enabled: true
+    role: Admin
+    username: boaz
+    firstName: admin
+    lastName: user
+    password: "qwer1234!"
+  service:
+    type: NodePort
+# ----------------------- POSTGRESQL ----------------------- #
+data:
+  metadataConnection:
+    user: boaz
+    pass: "qwer1234!"
+    protocol: postgresql
+    host: ~
+    port: 5432
+    db: postgres
+    sslmode: disable
+postgresql:
+  enabled: true
+  image:
+    tag: "11"
+  auth:
+    enablePostgresUser: true
+    postgresPassword: "qwer1234!"
+    username: "boaz"
+    password: "qwer1234!"
