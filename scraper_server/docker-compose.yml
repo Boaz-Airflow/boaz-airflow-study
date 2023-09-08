@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  aws-ecs-fastapi:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+
+    container_name: aws-fastapi
+    command: python server.py
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
